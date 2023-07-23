@@ -1,0 +1,97 @@
+[gd_scene load_steps=15 format=3 uid="uid://bggkhl5percw2"]
+
+[ext_resource type="Script" path="res://enemy.gd" id="1_wl04l"]
+[ext_resource type="Texture2D" uid="uid://b7y1c7xcwpatq" path="res://assets/sprites/padrao_alef.png" id="2_c3vur"]
+[ext_resource type="Texture2D" uid="uid://dux6mpitewmnc" path="res://assets/sprites/padrao_alef_tras.png" id="3_qkw1e"]
+[ext_resource type="Texture2D" uid="uid://dije42ctjtejy" path="res://assets/sprites/padrao_alef_frente.png" id="4_c7wi7"]
+[ext_resource type="Texture2D" uid="uid://dt7rx1suw2hyn" path="res://assets/sprites/soco_alef.png" id="5_vunv3"]
+[ext_resource type="Texture2D" uid="uid://crrumnw5ki6er" path="res://assets/sprites/chute_alef.png" id="6_3kfmq"]
+[ext_resource type="Texture2D" uid="uid://bqbynr8kigf" path="res://assets/sprites/voadora_1_alef.png" id="7_hkfhk"]
+[ext_resource type="Texture2D" uid="uid://cpfqclbqhvfaf" path="res://assets/sprites/voadora_2_alef.png" id="8_ttwkl"]
+[ext_resource type="Texture2D" uid="uid://dhmeegm7rgp3s" path="res://assets/sprites/run_alef_1.png" id="9_hgsbi"]
+[ext_resource type="Texture2D" uid="uid://cqcixp26gj5lh" path="res://assets/sprites/run_2_alef.png" id="10_31km3"]
+[ext_resource type="PackedScene" uid="uid://cvda7sv1octlx" path="res://hitbox.tscn" id="11_kv4nj"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_674t5"]
+radius = 24.0
+height = 90.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mkhk4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_c3vur")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_qkw1e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_c7wi7")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.4
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_vunv3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_3kfmq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_hkfhk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ttwkl")
+}],
+"loop": true,
+"name": &"soco",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_hgsbi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_31km3")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 2.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ia71y"]
+radius = 26.4286
+height = 94.2857
+
+[node name="enemy" type="CharacterBody2D"]
+scale = Vector2(1.4, 1.4)
+script = ExtResource("1_wl04l")
+
+[node name="collision" type="CollisionShape2D" parent="."]
+position = Vector2(-5, -1)
+shape = SubResource("CapsuleShape2D_674t5")
+
+[node name="anim" type="AnimatedSprite2D" parent="."]
+position = Vector2(-4, -3)
+scale = Vector2(0.085, 0.085)
+sprite_frames = SubResource("SpriteFrames_mkhk4")
+animation = &"walk"
+frame_progress = 0.00698564
+
+[node name="hitbox" parent="." instance=ExtResource("11_kv4nj")]
+
+[node name="collision2" type="CollisionShape2D" parent="hitbox"]
+position = Vector2(-4.28571, -2.14286)
+shape = SubResource("CapsuleShape2D_ia71y")
+debug_color = Color(0.945098, 0, 0.588235, 0.419608)
+
+[node name="ray_right" type="RayCast2D" parent="."]
+position = Vector2(21, 0)
+target_position = Vector2(4, 0)
+
+[node name="ray_left" type="RayCast2D" parent="."]
+position = Vector2(-30, 5.68434e-14)
+rotation = 3.14159
+target_position = Vector2(4, 0)

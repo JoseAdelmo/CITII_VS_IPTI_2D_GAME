@@ -1,0 +1,140 @@
+[gd_scene load_steps=18 format=3 uid="uid://cjmfrgg6xqrm2"]
+
+[ext_resource type="Texture2D" uid="uid://rxt06urpgpor" path="res://assets/bg/citii.jpg" id="1_dsiai"]
+[ext_resource type="Script" path="res://player.gd" id="1_mvxao"]
+[ext_resource type="Texture2D" uid="uid://ibklypler5y0" path="res://assets/sprites/padrao_adelmo_tras.png" id="2_jykul"]
+[ext_resource type="Texture2D" uid="uid://cry4ny88gk1qs" path="res://assets/sprites/soco_adelmo.png" id="5_a5sie"]
+[ext_resource type="Texture2D" uid="uid://bn282v0palouo" path="res://assets/sprites/cotovelada_adelmo.png" id="6_loh0t"]
+[ext_resource type="Texture2D" uid="uid://csapk4slew31v" path="res://assets/sprites/chute_adelmo.png" id="7_ots8b"]
+[ext_resource type="Texture2D" uid="uid://cbep43ysmb1ic" path="res://assets/sprites/voadora_1_adelmo.png" id="8_g2eig"]
+[ext_resource type="Texture2D" uid="uid://bi0nryojhr62a" path="res://assets/sprites/padrao_adelmo.png" id="8_hdyeu"]
+[ext_resource type="Texture2D" uid="uid://b0nqvv52jq6cn" path="res://assets/sprites/ruan_adelmo_1.png" id="8_kmmrh"]
+[ext_resource type="Texture2D" uid="uid://dbk547hnw3lnw" path="res://assets/sprites/run_adelmo_2.png" id="9_c6fkw"]
+[ext_resource type="Texture2D" uid="uid://cucg0biuyfurc" path="res://assets/sprites/voadora_2_adelmo.png" id="9_jkl5u"]
+[ext_resource type="PackedScene" uid="uid://bggkhl5percw2" path="res://enemy.tscn" id="12_tunuv"]
+[ext_resource type="AudioStream" uid="uid://ccg40m31h56an" path="res://Mortal Kombat.mp3" id="13_6udpj"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6sx1v"]
+radius = 22.0
+height = 90.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ec0n4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_a5sie")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_loh0t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ots8b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_g2eig")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_jkl5u")
+}],
+"loop": false,
+"name": &"combo",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_hdyeu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_jykul")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 1.2
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_g2eig")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_jkl5u")
+}],
+"loop": false,
+"name": &"kick",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_a5sie")
+}],
+"loop": false,
+"name": &"punch",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_kmmrh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_c6fkw")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 4.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gq8ev"]
+radius = 25.0
+height = 90.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nthwo"]
+size = Vector2(607, 21)
+
+[node name="Stage - 01" type="Node2D"]
+
+[node name="Citii" type="Sprite2D" parent="."]
+position = Vector2(320, 164)
+scale = Vector2(1.37365, 1.25385)
+texture = ExtResource("1_dsiai")
+
+[node name="player" type="CharacterBody2D" parent="."]
+position = Vector2(88, 61)
+collision_mask = 22
+script = ExtResource("1_mvxao")
+
+[node name="collision" type="CollisionShape2D" parent="player"]
+position = Vector2(189, 154)
+shape = SubResource("CapsuleShape2D_6sx1v")
+
+[node name="anim" type="AnimatedSprite2D" parent="player"]
+position = Vector2(197, 136)
+scale = Vector2(0.12, 0.112)
+sprite_frames = SubResource("SpriteFrames_ec0n4")
+animation = &"idle"
+
+[node name="hurtbox" type="Area2D" parent="player"]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player/hurtbox"]
+position = Vector2(188, 154)
+shape = SubResource("CapsuleShape2D_gq8ev")
+debug_color = Color(0.956863, 0, 0.537255, 0.419608)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-8, -36)
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(319, 320)
+shape = SubResource("RectangleShape2D_nthwo")
+
+[node name="enemy" parent="." groups=["enemies"] instance=ExtResource("12_tunuv")]
+position = Vector2(402, 240)
+collision_layer = 4
+collision_mask = 3
+
+[node name="music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_6udpj")
+
+[connection signal="animation_finished" from="player/anim" to="player" method="_on_anim_animation_finished"]
+[connection signal="body_entered" from="player/hurtbox" to="player" method="_on_hurtbox_body_entered"]
